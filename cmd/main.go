@@ -2,7 +2,9 @@ package main
 
 import (
 	_ "github.com/Oybek-uzb/posts_api_gateway/cmd/docs"
+	"github.com/Oybek-uzb/posts_api_gateway/config"
 	"github.com/Oybek-uzb/posts_api_gateway/controller"
+	"github.com/Oybek-uzb/posts_api_gateway/services"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
@@ -25,6 +27,11 @@ import (
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
+
+	cfg := config.Load()
+
+	gprcClients, _ := services.NewGrpcClients(&cfg)
+
 	r := gin.Default()
 
 	c := controller.NewController()
