@@ -2,17 +2,19 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/Oybek-uzb/posts_api_gateway/config"
+	posts_crud_service "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_crud_service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 type ServiceManager interface {
-	PostsCRUDService() bond_service.BondServiceClient
+	PostsCRUDService() posts_crud_service.PostsCRUDServiceClient
 }
 
 type grpcClients struct {
-	postsCRUDService bond_service.BondServiceClient
+	postsCRUDService posts_crud_service.PostsCRUDServiceClient
 }
 
 func NewGrpcClients(conf *config.Config) (*grpcClients, error) {
@@ -24,6 +26,6 @@ func NewGrpcClients(conf *config.Config) (*grpcClients, error) {
 	}
 
 	return &grpcClients{
-		postsCRUDService: bond_service.NewBondServiceClient(postsCRUDService),
+		postsCRUDService: posts_crud_service.NewPostsCRUDServiceClient(postsCRUDService),
 	}, nil
 }
