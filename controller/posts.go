@@ -1,9 +1,13 @@
 package controller
 
 import (
-	"github.com/Oybek-uzb/posts_api_gateway/models"
-	"github.com/gin-gonic/gin"
+	"context"
 	"net/http"
+	"strconv"
+	"time"
+
+	pbp "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_crud_service"
+	"github.com/gin-gonic/gin"
 )
 
 // GetPost godoc
@@ -18,14 +22,27 @@ import (
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Router       /posts/{id} [get]
-func (c *Controller) GetPost(ctx *gin.Context) {
-	post := models.Post{
-		ID:     11,
-		UserId: 11,
-		Title:  "Liboy",
-		Body:   "Liboy",
+func (c *Controller) GetPost(gc *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
+	defer cancel()
+
+	postId, err2 := strconv.Atoi(gc.Param("id"))
+
+	if err2 != nil {
+		gc.JSON(http.StatusInternalServerError, err2)
+		return
 	}
-	ctx.JSON(http.StatusOK, post)
+
+	response, err := c.Services.PostsCRUDService().GetPost(ctx, &pbp.GetPostRequest{
+		Id: int32(postId),
+	})
+
+	if err != nil {
+		gc.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.ResponseProtoJson(gc, response)
 }
 
 // GetAllPosts godoc
@@ -39,7 +56,18 @@ func (c *Controller) GetPost(ctx *gin.Context) {
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Router       /posts [get]
-func (c *Controller) GetAllPosts(ctx *gin.Context) {
+func (c *Controller) GetAllPosts(gc *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
+	defer cancel()
+
+	response, err := c.Services.PostsCRUDService().GetAllPosts(ctx, &pbp.GetAllPostsRequest{})
+
+	if err != nil {
+		gc.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.ResponseProtoJson(gc, response)
 }
 
 // UpdatePartialPost godoc
@@ -55,7 +83,38 @@ func (c *Controller) GetAllPosts(ctx *gin.Context) {
 // @Failure      404      {object}  httputil.HTTPError
 // @Failure      500      {object}  httputil.HTTPError
 // @Router       /posts/{id} [patch]
-func (c *Controller) UpdatePartialPost(ctx *gin.Context) {
+func (c *Controller) UpdatePartialPost(gc *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
+	defer cancel()
+
+	postId, err := strconv.Atoi(gc.Param("id"))
+
+	if err != nil {
+		gc.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	var data pbp.Post
+
+	err = gc.ShouldBindJSON(&data)
+
+	if err != nil {
+		gc.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	data.Id = int32(postId)
+
+	response, err := c.Services.PostsCRUDService().UpdatePartialPost(ctx, &pbp.UpdatePartialPostRequest{
+		UpdateData: &data,
+	})
+
+	if err != nil {
+		gc.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.ResponseProtoJson(gc, response)
 }
 
 // DeletePost godoc
@@ -70,5 +129,25 @@ func (c *Controller) UpdatePartialPost(ctx *gin.Context) {
 // @Failure      404  {object}  httputil.HTTPError
 // @Failure      500  {object}  httputil.HTTPError
 // @Router       /posts/{id} [delete]
-func (c *Controller) DeletePost(ctx *gin.Context) {
+func (c *Controller) DeletePost(gc *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
+	defer cancel()
+
+	postId, err := strconv.Atoi(gc.Param("id"))
+
+	if err != nil {
+		gc.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := c.Services.PostsCRUDService().DeletePost(ctx, &pbp.DeletePostRequest{
+		Id: int32(postId),
+	})
+
+	if err != nil {
+		gc.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.ResponseProtoJson(gc, response)
 }

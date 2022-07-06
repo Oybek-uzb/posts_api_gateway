@@ -17,7 +17,7 @@ type grpcClients struct {
 	postsCRUDService posts_crud_service.PostsCRUDServiceClient
 }
 
-func NewGrpcClients(conf *config.Config) (*grpcClients, error) {
+func NewGrpcClients(conf *config.Config) (ServiceManager, error) {
 	postsCRUDService, err := grpc.Dial(
 		fmt.Sprintf("%s:%d", conf.PostsCRUDServiceHost, conf.PostsCRUDServicePort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -28,4 +28,8 @@ func NewGrpcClients(conf *config.Config) (*grpcClients, error) {
 	return &grpcClients{
 		postsCRUDService: posts_crud_service.NewPostsCRUDServiceClient(postsCRUDService),
 	}, nil
+}
+
+func (g grpcClients) PostsCRUDService() posts_crud_service.PostsCRUDServiceClient {
+	return g.postsCRUDService
 }

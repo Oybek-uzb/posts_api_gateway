@@ -6,8 +6,8 @@ import (
 	"github.com/Oybek-uzb/posts_api_gateway/controller"
 	"github.com/Oybek-uzb/posts_api_gateway/services"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title           Iman test-task API
@@ -30,11 +30,11 @@ func main() {
 
 	cfg := config.Load()
 
-	gprcClients, _ := services.NewGrpcClients(&cfg)
+	grpcClients, _ := services.NewGrpcClients(&cfg)
 
 	r := gin.Default()
 
-	c := controller.NewController()
+	c := controller.NewController(grpcClients)
 
 	v1 := r.Group("/api/v1")
 	{
@@ -48,7 +48,7 @@ func main() {
 
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	err := r.Run(":8080")
+	err := r.Run(cfg.HttpPort)
 
 	if err != nil {
 		return

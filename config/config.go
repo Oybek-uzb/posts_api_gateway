@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/spf13/cast"
 	"os"
+
+	"github.com/spf13/cast"
 )
 
 type Config struct {
@@ -21,8 +22,8 @@ func Load() Config {
 
 	config.HttpPort = cast.ToString(getOrReturnDefault("HTTP_PORT", ":8080"))
 
-	config.PostsCRUDServiceHost = cast.ToString(getOrReturnDefault("BOND_SERVICE_GRPC_HOST", "bond-service"))
-	config.PostsCRUDServicePort = cast.ToInt(getOrReturnDefault("BOND_SERVICE_GRPC_PORT", 80))
+	config.PostsCRUDServiceHost = cast.ToString(getOrReturnDefault("POSTS_CRUD_SERVICE_HOST", "localhost"))
+	config.PostsCRUDServicePort = cast.ToInt(getOrReturnDefault("POSTS_CRUD_SERVICE_PORT", 8081))
 
 	return config
 }
