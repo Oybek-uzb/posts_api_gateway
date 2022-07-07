@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.2
-// source: posts_crud_service.proto
+// source: posts_crud_service/posts_crud_service.proto
 
 package posts_crud_service
 
@@ -38,7 +38,7 @@ func NewPostsCRUDServiceClient(cc grpc.ClientConnInterface) PostsCRUDServiceClie
 
 func (c *postsCRUDServiceClient) GetAllPosts(ctx context.Context, in *GetAllPostsRequest, opts ...grpc.CallOption) (*GetAllPostsResponse, error) {
 	out := new(GetAllPostsResponse)
-	err := c.cc.Invoke(ctx, "/api.PostsCRUDService/GetAllPosts", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/posts_crud_service.PostsCRUDService/GetAllPosts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *postsCRUDServiceClient) GetAllPosts(ctx context.Context, in *GetAllPost
 
 func (c *postsCRUDServiceClient) GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostResponse, error) {
 	out := new(GetPostResponse)
-	err := c.cc.Invoke(ctx, "/api.PostsCRUDService/GetPost", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/posts_crud_service.PostsCRUDService/GetPost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *postsCRUDServiceClient) GetPost(ctx context.Context, in *GetPostRequest
 
 func (c *postsCRUDServiceClient) UpdatePartialPost(ctx context.Context, in *UpdatePartialPostRequest, opts ...grpc.CallOption) (*UpdatePartialPostResponse, error) {
 	out := new(UpdatePartialPostResponse)
-	err := c.cc.Invoke(ctx, "/api.PostsCRUDService/UpdatePartialPost", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/posts_crud_service.PostsCRUDService/UpdatePartialPost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *postsCRUDServiceClient) UpdatePartialPost(ctx context.Context, in *Upda
 
 func (c *postsCRUDServiceClient) DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error) {
 	out := new(DeletePostResponse)
-	err := c.cc.Invoke(ctx, "/api.PostsCRUDService/DeletePost", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/posts_crud_service.PostsCRUDService/DeletePost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func _PostsCRUDService_GetAllPosts_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.PostsCRUDService/GetAllPosts",
+		FullMethod: "/posts_crud_service.PostsCRUDService/GetAllPosts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostsCRUDServiceServer).GetAllPosts(ctx, req.(*GetAllPostsRequest))
@@ -140,7 +140,7 @@ func _PostsCRUDService_GetPost_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.PostsCRUDService/GetPost",
+		FullMethod: "/posts_crud_service.PostsCRUDService/GetPost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostsCRUDServiceServer).GetPost(ctx, req.(*GetPostRequest))
@@ -158,7 +158,7 @@ func _PostsCRUDService_UpdatePartialPost_Handler(srv interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.PostsCRUDService/UpdatePartialPost",
+		FullMethod: "/posts_crud_service.PostsCRUDService/UpdatePartialPost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostsCRUDServiceServer).UpdatePartialPost(ctx, req.(*UpdatePartialPostRequest))
@@ -176,7 +176,7 @@ func _PostsCRUDService_DeletePost_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.PostsCRUDService/DeletePost",
+		FullMethod: "/posts_crud_service.PostsCRUDService/DeletePost",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostsCRUDServiceServer).DeletePost(ctx, req.(*DeletePostRequest))
@@ -188,7 +188,7 @@ func _PostsCRUDService_DeletePost_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PostsCRUDService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.PostsCRUDService",
+	ServiceName: "posts_crud_service.PostsCRUDService",
 	HandlerType: (*PostsCRUDServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -209,5 +209,5 @@ var PostsCRUDService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "posts_crud_service.proto",
+	Metadata: "posts_crud_service/posts_crud_service.proto",
 }

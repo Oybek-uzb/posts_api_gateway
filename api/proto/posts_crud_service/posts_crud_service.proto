@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package api;
+package posts_crud_service;
 
 option go_package = "/posts_crud_service";
 
