@@ -6,9 +6,35 @@ import (
 	"strconv"
 	"time"
 
-	pbp "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_crud_service"
+	pbpc "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_crud_service"
+	pbp "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_service"
 	"github.com/gin-gonic/gin"
 )
+
+// FetchFromRemote godoc
+// @Summary      Fetch posts from remote origin
+// @Description  Fetch just by clicking
+// @Tags         posts
+// @Accept       json
+// @Produce      json
+// @Success      200  {array}  models.Post
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /posts/{id} [get]
+func (c *Controller) FetchFromRemote(gc *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
+	defer cancel()
+
+	response, err := c.Services.RemotePostsService().GetRemotePosts(ctx, &pbp.GetRemotePostsRequest{})
+
+	if err != nil {
+		gc.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.ResponseProtoJson(gc, response)
+}
 
 // GetPost godoc
 // @Summary      Get a post
@@ -33,7 +59,7 @@ func (c *Controller) GetPost(gc *gin.Context) {
 		return
 	}
 
-	response, err := c.Services.PostsCRUDService().GetPost(ctx, &pbp.GetPostRequest{
+	response, err := c.Services.PostsCRUDService().GetPost(ctx, &pbpc.GetPostRequest{
 		Id: int32(postId),
 	})
 
@@ -60,7 +86,7 @@ func (c *Controller) GetAllPosts(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
 	defer cancel()
 
-	response, err := c.Services.PostsCRUDService().GetAllPosts(ctx, &pbp.GetAllPostsRequest{})
+	response, err := c.Services.PostsCRUDService().GetAllPosts(ctx, &pbpc.GetAllPostsRequest{})
 
 	if err != nil {
 		gc.JSON(http.StatusInternalServerError, err)
@@ -94,7 +120,7 @@ func (c *Controller) UpdatePartialPost(gc *gin.Context) {
 		return
 	}
 
-	var data pbp.Post
+	var data pbpc.Post
 
 	err = gc.ShouldBindJSON(&data)
 
@@ -105,7 +131,7 @@ func (c *Controller) UpdatePartialPost(gc *gin.Context) {
 
 	data.Id = int32(postId)
 
-	response, err := c.Services.PostsCRUDService().UpdatePartialPost(ctx, &pbp.UpdatePartialPostRequest{
+	response, err := c.Services.PostsCRUDService().UpdatePartialPost(ctx, &pbpc.UpdatePartialPostRequest{
 		UpdateData: &data,
 	})
 
@@ -140,7 +166,7 @@ func (c *Controller) DeletePost(gc *gin.Context) {
 		return
 	}
 
-	response, err := c.Services.PostsCRUDService().DeletePost(ctx, &pbp.DeletePostRequest{
+	response, err := c.Services.PostsCRUDService().DeletePost(ctx, &pbpc.DeletePostRequest{
 		Id: int32(postId),
 	})
 

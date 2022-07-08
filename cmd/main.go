@@ -40,6 +40,7 @@ func main() {
 	{
 		posts := v1.Group("/posts")
 		{
+			posts.POST("/fetch-from-remote", c.FetchFromRemote)
 			posts.GET(":id", c.GetPost)
 			posts.GET("", c.GetAllPosts)
 			posts.PATCH(":id", c.UpdatePartialPost)
