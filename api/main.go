@@ -34,7 +34,7 @@ func NewServer(sm services.ServiceManager) *gin.Engine {
 
 	posts := r.Group("/api/v1")
 	{
-		posts.POST("/fetch-from-remote", c.FetchFromRemote)
+		posts.POST("/posts/fetch-from-remote", c.FetchFromRemote)
 		posts.GET("/posts", c.GetAllPosts)
 		posts.GET("/posts/:id", c.GetPost)
 		posts.PATCH("/posts/:id", c.UpdatePartialPost)
