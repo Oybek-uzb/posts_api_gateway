@@ -50,5 +50,5 @@ service RemotePostsService {
 
 message GetRemotePostsRequest {}
 message GetRemotePostsResponse {
-  repeated Post posts = 1;
+  bool isProcessFinishedSuccessfully = 1;
 }

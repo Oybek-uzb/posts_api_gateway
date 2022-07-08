@@ -1,4 +1,4 @@
-package controller
+package api
 
 import (
 	"context"
@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gin-gonic/gin"
+
 	pbpc "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_crud_service"
 	pbp "github.com/Oybek-uzb/posts_api_gateway/pkg/api/posts_service"
-	"github.com/gin-gonic/gin"
 )
 
 // FetchFromRemote godoc
@@ -17,11 +18,11 @@ import (
 // @Tags         posts
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  models.Post
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
-// @Router       /posts/{id} [get]
+// @Success      200  {object}  bool
+// @Failure      400      {object}  HTTPError
+// @Failure      404      {object}  HTTPError
+// @Failure      500      {object}  HTTPError
+// @Router       /posts/fetch-from-remote [post]
 func (c *Controller) FetchFromRemote(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
 	defer cancel()
@@ -43,10 +44,10 @@ func (c *Controller) FetchFromRemote(gc *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "Post ID"
-// @Success      200  {object}  models.Post
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
+// @Success      200  {object}  Post
+// @Failure      400      {object}  HTTPError
+// @Failure      404      {object}  HTTPError
+// @Failure      500      {object}  HTTPError
 // @Router       /posts/{id} [get]
 func (c *Controller) GetPost(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
@@ -75,12 +76,12 @@ func (c *Controller) GetPost(gc *gin.Context) {
 // @Summary      List posts
 // @Description  Get all posts
 // @Tags         posts
-// @Accept       json
+// @Accept       */*
 // @Produce      json
-// @Success      200  {array}   models.Post
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
+// @Success      200  {array}   Post
+// @Failure      400      {object}  HTTPError
+// @Failure      404      {object}  HTTPError
+// @Failure      500      {object}  HTTPError
 // @Router       /posts [get]
 func (c *Controller) GetAllPosts(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
@@ -103,11 +104,11 @@ func (c *Controller) GetAllPosts(gc *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      int                  true  "Post ID"
-// @Param        post  body      models.UpdatePost  true  "Update post"
-// @Success      200      {object}  models.Post
-// @Failure      400      {object}  httputil.HTTPError
-// @Failure      404      {object}  httputil.HTTPError
-// @Failure      500      {object}  httputil.HTTPError
+// @Param        post  body      UpdatePost  true  "Update post"
+// @Success      200      {object}  Post
+// @Failure      400      {object}  HTTPError
+// @Failure      404      {object}  HTTPError
+// @Failure      500      {object}  HTTPError
 // @Router       /posts/{id} [patch]
 func (c *Controller) UpdatePartialPost(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
@@ -150,10 +151,10 @@ func (c *Controller) UpdatePartialPost(gc *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id   path      int  true  "Post ID"
-// @Success      204  {object}  models.Post
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
+// @Success      204  {object}  Post
+// @Failure      400  {object}  HTTPError
+// @Failure      404  {object}  HTTPError
+// @Failure      500  {object}  HTTPError
 // @Router       /posts/{id} [delete]
 func (c *Controller) DeletePost(gc *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(7))
@@ -176,4 +177,22 @@ func (c *Controller) DeletePost(gc *gin.Context) {
 	}
 
 	c.ResponseProtoJson(gc, response)
+}
+
+type Post struct {
+	ID     int    `json:"id"`
+	UserId int    `json:"user_id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+}
+
+type UpdatePost struct {
+	Title  string `json:"title"`
+	UserId int    `json:"user_id"`
+	Body   string `json:"body"`
+}
+
+type HTTPError struct {
+	Code    int    `json:"code" example:"400"`
+	Message string `json:"message" example:"status bad request"`
 }
